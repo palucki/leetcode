@@ -1,5 +1,7 @@
 #include <iostream>
 #include <fstream>
+#include <queue>
+#include <vector>
 
 #define MAXV 1000 /* maximum number of vertices */
 
@@ -88,7 +90,7 @@ void print_graph(graph *g)
 }
 
 bool processed[MAXV+1]; /* which vertices have been processed */
-bool discovered[MAXV+1]; /* which vertices have been found */
+bool discovered[MAXV+1]; /* which vertices have been found and possibly added to queue */
 int parent[MAXV+1]; /* discovery relation */
 
 void initialize_search(graph *g)
@@ -100,22 +102,6 @@ void initialize_search(graph *g)
         parent[i] = -1;
     }
 }
-
-// struct edgenode
-// {
-//     int y;                 /* adjacency info */
-//     int weight;            /* edge weight, if any */
-//     struct edgenode *next; /* next edge in list */
-// };
-
-// struct graph
-// {
-//     edgenode *edges[MAXV + 1]; /* adjacency info */
-//     int degree[MAXV + 1];      /* outdegree of each vertex */
-//     int nvertices;             /* number of vertices in graph */
-//     int nedges;                /* number of edges in graph */
-//     bool directed;             /* is the graph directed? */
-// };
 
 void dfs(graph* g, int v)
 {
@@ -140,6 +126,46 @@ void dfs(graph* g, int v)
     }
 }
 
+void bfs(graph* g, int v)
+{
+
+    std::queue<int> q;
+    
+    std::cout << "At " << v << '\n';
+    discovered[v] = true;
+    processed[v] = true;
+    edgenode* next = g->edges[v];
+    while(next != nullptr)
+    {
+        // std::cout << "Added " << next->y << '\n';
+        parent[next->y] = v;
+        q.push(next->y);
+        next = next->next;
+    }
+
+    while(!q.empty())
+    {
+        v = q.front();
+        q.pop();
+
+        std::cout << "At " << v << '\n';
+        processed[v] = true;
+
+        edgenode* next = g->edges[v];
+        while(next != nullptr)
+        {
+            if(!discovered[next->y])
+            {
+                // std::cout << "Added " << next->y << '\n';
+                parent[next->y] = v;
+                q.push(next->y);
+                discovered[next->y] = true; // means: in queue
+            }
+            next = next->next;
+        }
+    }
+}
+
 int main(int argc, char **argv)
 {
     graph g;
@@ -147,8 +173,11 @@ int main(int argc, char **argv)
     print_graph(&g);
 
     std::cout << "BFS\n";
+    initialize_search(&g);
+    bfs(&g, 1);
 
     std::cout << "DFS\n";
+    initialize_search(&g);
     dfs(&g, 1);
 
 
