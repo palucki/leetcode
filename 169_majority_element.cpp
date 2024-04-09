@@ -4,22 +4,31 @@
 
 using namespace std;
 
+// boyer-moore voting algorithm
 int majorityElement(const vector<int>& nums) 
 {
-    std::unordered_map<int, int> counter;
-    
+    int counter = 0;
+    int candidate = 0;
+
     for(const auto& n : nums)
     {
-        counter[n]++;
+        if (counter == 0)
+        {
+            // counter = 1;
+            candidate = n;
+        }
+
+        if (n != candidate)
+        {
+            counter--;
+        }
+        else 
+        {
+            counter++;
+        }
     }
 
-    for (const auto& [key,val] : counter) 
-    {  
-        if (val > nums.size() / 2)
-            return key;   
-    } 
-
-    return -1;
+    return candidate;
 }
 
 
