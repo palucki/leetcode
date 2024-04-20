@@ -17,7 +17,7 @@ bool canJump(vector<int>& nums)
         }
 
         int num = nums[i];
-        for(int j = 0; j <= num && j < nums.size(); ++j)
+        for(int j = 0; j <= num && j+i < nums.size(); ++j)
         {
             // std::cout << "from " << i << " can reach " << j+i << '\n';
             can_reach[j+i] = true;
