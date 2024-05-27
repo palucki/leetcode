@@ -7,9 +7,23 @@ using namespace std;
 
 int climbStairs(int n)
 {
-    if(n <= 1) return 1;
-    if(n == 2) return 2;
-    else return climbStairs(n-1) + climbStairs(n-2);
+    std::unordered_map<int, int> memo;
+    std::function<int(int)> climbStairsSolver = [&memo, &climbStairsSolver](int n)
+    {
+        if(n <= 1) return 1;
+        if(n == 2) return 2;
+
+        if(memo.find(n) != memo.end())
+        {
+            return memo[n];
+        }
+
+        memo[n] = climbStairsSolver(n-1) + climbStairsSolver(n-2);
+
+        return memo[n];
+    };
+
+    return climbStairsSolver(n);
 }
 
 void test(int n)
