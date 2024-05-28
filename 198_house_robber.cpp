@@ -5,6 +5,13 @@
 
 using namespace std;
 
+int robRecursively(vector<int>& nums, int n) 
+{
+    if(n < 0) return 0;
+
+    return std::max(nums[n] + robRecursively(nums, n-2), robRecursively(nums, n-1));
+}
+
 int rob(vector<int>& nums) 
 {
     bool used_last = true;
@@ -34,10 +41,10 @@ int main(int argc, char** argv)
 {
     std::chrono::time_point<std::chrono::steady_clock> start = std::chrono::steady_clock::now();
 
-    // test({1,2,3,1});
-    // test({2, 7, 9, 3, 1});
-    // test({1,9,1,1,2});
-    test({2,1,1,2});
+    test({1,2,3,1}); // 4
+    test({2, 7, 9, 3, 1}); //12
+    test({1,9,1,1,2}); //11
+    test({2,1,1,2}); // 4
 
 	std::chrono::time_point<std::chrono::steady_clock> stop = std::chrono::steady_clock::now();
 	std::chrono::duration<double, std::milli> elapsed = stop - start;
