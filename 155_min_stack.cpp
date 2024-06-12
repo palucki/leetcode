@@ -4,6 +4,7 @@
 #include <queue>
 #include <unordered_map>
 #include <set>
+#include <limits>
 
 class MinStack {
 public:
@@ -13,31 +14,33 @@ public:
     
     void push(int val) 
     {
-        m_mins.insert(val);
-        m_data.push_back(val);
+        if(m_data.empty())
+        {
+            m_data.push_back({val, std::min(val, val)});
+            return;
+        }
+        
+        int current_min = m_data[m_data.size() - 1].second;
+        m_data.push_back({val, std::min(val, current_min)});
     }
     
     void pop() 
     {
-        const auto elem_it = m_data.end() - 1;
-
-        m_mins.erase(m_mins.find(*elem_it));
-        m_data.erase(elem_it);
+        m_data.erase(m_data.end() - 1);
     }
     
     int top() 
     {
-        return m_data[m_data.size() - 1];
+        return m_data[m_data.size() - 1].first;
     }
     
     int getMin() 
     {
-        return *m_mins.begin();
+        return m_data[m_data.size() - 1].second;
     }
 
 private:
-    std::multiset<int> m_mins;
-    std::vector<int> m_data;
+    std::vector<std::pair<int, int>> m_data;
 };
 
 /**
