@@ -62,24 +62,46 @@ int binsearch_col(vector<int>& row, int low, int high, int target)
     return -1;
 }
 
+// nice but has time copmlexity O(n+m) !!!
+bool searchZigZag(vector<vector<int>>& matrix, int target)
+{
+    int rows = matrix.size();
+    int cols = matrix[0].size();
+    int row = 0;
+    int col = cols - 1;
+
+    
+    while(row < rows && col >= 0)
+    {
+        int elem = matrix[row][col];
+        if (target < elem) col--;
+        else if (target > elem) row++;
+        else return true;
+    }
+
+    return false;
+}
+
+// using binary search time complexity is O(log(nm))
 bool searchMatrix(vector<vector<int>>& matrix, int target) 
 {
-    //find row, start at the middle
-    auto row = binsearch_row(matrix, 0, matrix.size()-1, target);
-    if(row == -1)
-    {
-        std::cout << "Not found row\n";
-        return false;
-    }
+    return searchZigZag(matrix, target);
+    // //find row, start at the middle
+    // auto row = binsearch_row(matrix, 0, matrix.size()-1, target);
+    // if(row == -1)
+    // {
+    //     std::cout << "Not found row\n";
+    //     return false;
+    // }
 
-    auto col = binsearch_col(matrix[row], 0, matrix[0].size()-1, target);
-    if(col == -1)
-    {
-        std::cout << "Not found col\n";
-        return false;
-    }
+    // auto col = binsearch_col(matrix[row], 0, matrix[0].size()-1, target);
+    // if(col == -1)
+    // {
+    //     std::cout << "Not found col\n";
+    //     return false;
+    // }
 
-    return true;
+    // return true;
 }
 
 void test(vector<vector<int>>& matrix, int target)
