@@ -18,97 +18,37 @@ void print(ListNode* l)
     std::cout << '\n';
 }
 
-// 2 4 3
-// 5 6 4
-
-struct Nodes {
-    ListNode* current;
-    ListNode* l1;
-    ListNode* l2;
-};
-
-Nodes addBothValid(ListNode* l1, ListNode* l2, ListNode* current, bool& overflow)
-{
-    while(l1 && l2)
-    {
-        std::cout << "l1 = " << l1->val << " l2 = " << l2->val << '\n';
-
-        int sum = l1->val + l2->val + current->val;
-        if (sum >= 10)
-        {
-            sum = sum % 10;
-            overflow = true;
-        }
-
-        current->val = sum;
-
-        l1 = l1->next;
-        l2 = l2->next;
-        if(l1 || l2 || overflow)
-        {
-            current->next = new ListNode{};
-            current = current->next;
-            if (overflow)
-            {
-                current->val = 1;
-                overflow = false;
-            }
-        }
-    }
-
-    return {current, l1, l2};
-}
-
-ListNode* addOneValid(ListNode* l1, ListNode *current, bool& overflow)
-{
-    while(l1)
-    {
-        int sum = l1->val + current->val;
-        if (sum >= 10)
-        {
-            sum = sum % 10;
-            overflow = true;
-        }
-
-        current->val = sum;
-
-        l1 = l1->next;
-        if(l1 || overflow)
-        {
-            current->next = new ListNode{};
-            current = current->next;
-            if (overflow)
-            {
-                current->val = 1;
-                overflow = false;
-            }
-        }
-    }
-
-    return current;
-}
-
 ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) 
 {
     ListNode* root = new ListNode{};
     ListNode* current = root;
     bool overflow = false;
 
-    Nodes n = addBothValid(l1, l2, current, overflow);
-    current = n.current;
-    l1 = n.l1;
-    l2 = n.l2;
+    while (l1 || l2)
+    {
+        int sum = (l1 ? l1->val : 0) + (l2 ? l2->val : 0) + current->val;
+        if (sum >= 10)
+        {
+            sum = sum % 10;
+            overflow = true;
+        }
 
-    std::cout << "ended with current value " << current->val << '\n';
+        current->val = sum;
 
-    // add left from l1
-    current = addOneValid(l1, current, overflow);
-
-    std::cout << "ended with current value " << current->val << '\n';
-
-    current = addOneValid(l2, current, overflow);
-
-    std::cout << "ended with current value " << current->val << '\n';
+        if (l1) l1 = l1->next;
+        if (l2) l2 = l2->next;
+        
+        if (l1 || l2 || overflow)
+        {
+            current->next = new ListNode{};
+            current = current->next;
+            if (overflow)
+            {
+                current->val = 1;
+                overflow = false;
+            }
+        }
+    }
 
     return root;
 }
